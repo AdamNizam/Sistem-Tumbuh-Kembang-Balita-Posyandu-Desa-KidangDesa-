@@ -13,6 +13,12 @@ return new class extends Migration
     {
         Schema::create('balita', function (Blueprint $table) {
             $table->id();
+            $table->string('nama_balita');
+            $table->enum('jenis_kelamin', ['laki-laki', 'perempuan']);
+            $table->date('tanggal_lahir');
+            $table->string('nama_orang_tua');
+            $table->integer('umur');
+            $table->text('alamat');
             $table->timestamps();
         });
     }
