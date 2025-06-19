@@ -17,6 +17,7 @@ class Pertumbuhan extends Model
         'tinggi_badan',
         'lingkar_kepala',
         'tanggal_input',
+        'kategori_pertumbuhan'
     ];
 
     /**

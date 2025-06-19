@@ -18,6 +18,7 @@ return new class extends Migration
             $table->float('tinggi_badan');
             $table->float('lingkar_kepala');
             $table->date('tanggal_input');
+            $table->string('kategori_pertumbuhan')->nullable();
             $table->timestamps();
 
             $table->foreign('id_balita')->references('id')->on('balita')->onDelete('cascade');

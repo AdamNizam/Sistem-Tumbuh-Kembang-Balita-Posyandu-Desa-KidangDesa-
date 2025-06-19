@@ -12,6 +12,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Tables\Filters\Filter;
 
 class JadwalResource extends Resource
 {
@@ -19,30 +20,53 @@ class JadwalResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-s-rectangle-stack';
 
+    protected static ?string $pluralModelLabel = 'Jadwal Posyandu';
+
+    protected static ?string $navigationGroup = 'Data Posyandu';
+
     public static function form(Form $form): Form
     {
-        return $form
+       return $form
             ->schema([
-                //
+                Forms\Components\TextInput::make('kegiatan')
+                    ->required()
+                    ->maxLength(255),
+
+                Forms\Components\DatePicker::make('tanggal')
+                    ->required(),
+
+                Forms\Components\TextInput::make('lokasi')
+                    ->required()
+                    ->maxLength(255),
             ]);
     }
 
     public static function table(Table $table): Table
-    {
-        return $table
+    {  return $table
             ->columns([
-                //
+                Tables\Columns\TextColumn::make('kegiatan')->searchable(),
+                Tables\Columns\TextColumn::make('tanggal')->date(),
+                Tables\Columns\TextColumn::make('lokasi'),
+                Tables\Columns\TextColumn::make('created_at')->since(),
             ])
-            ->filters([
-                //
-            ])
+          ->filters([
+                Filter::make('tanggal')
+                    ->form([
+                        Forms\Components\DatePicker::make('from')->label('Dari Tanggal'),
+                        Forms\Components\DatePicker::make('until')->label('Sampai Tanggal'),
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query
+                            ->when($data['from'], fn ($q) => $q->whereDate('tanggal', '>=', $data['from']))
+                            ->when($data['until'], fn ($q) => $q->whereDate('tanggal', '<=', $data['until']));
+                    }),
+                ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
+                Tables\Actions\DeleteBulkAction::make(),
             ]);
     }
 
@@ -57,8 +81,6 @@ class JadwalResource extends Resource
     {
         return [
             'index' => Pages\ListJadwals::route('/'),
-            'create' => Pages\CreateJadwal::route('/create'),
-            'edit' => Pages\EditJadwal::route('/{record}/edit'),
         ];
     }
 }

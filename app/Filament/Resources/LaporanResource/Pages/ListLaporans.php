@@ -5,6 +5,7 @@ namespace App\Filament\Resources\LaporanResource\Pages;
 use App\Filament\Resources\LaporanResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
+use Filament\Actions\Action;
 
 class ListLaporans extends ListRecords
 {
@@ -14,6 +15,7 @@ class ListLaporans extends ListRecords
     {
         return [
             Actions\CreateAction::make(),
-        ];
-    }
+
+            ];
+        }
 }
