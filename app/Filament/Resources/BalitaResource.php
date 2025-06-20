@@ -49,6 +49,7 @@ class BalitaResource extends Resource
 
                         Forms\Components\TextInput::make('umur')
                             ->required()
+                            ->suffix(' bulan')
                             ->numeric(),
 
                         Forms\Components\Textarea::make('alamat')
@@ -67,7 +68,7 @@ class BalitaResource extends Resource
                 Tables\Columns\TextColumn::make('jenis_kelamin'),
                 Tables\Columns\TextColumn::make('tanggal_lahir')->date(),
                 Tables\Columns\TextColumn::make('nama_orang_tua')->searchable(),
-                Tables\Columns\TextColumn::make('umur'),
+                Tables\Columns\TextColumn::make('umur')->suffix(' bulan'),
                 Tables\Columns\TextColumn::make('alamat')->limit(30),
                 Tables\Columns\TextColumn::make('created_at')->since(),
             ])
@@ -84,9 +85,7 @@ class BalitaResource extends Resource
                 Tables\Actions\DeleteAction::make(), // Tambah action delete
             ])
             ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
+                Tables\Actions\DeleteBulkAction::make(),
             ]);
     }
 

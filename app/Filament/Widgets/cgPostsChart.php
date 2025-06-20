@@ -2,30 +2,37 @@
 
 namespace App\Filament\Widgets;
 
+use App\Models\Balita;
 use Filament\Widgets\ChartWidget;
-
 
 class cgPostsChart extends ChartWidget
 {
-    protected static ?string $heading = 'Chart';
-
-    protected static string $color = 'primary'; 
+    protected static ?string $heading = 'Persentase Balita Laki-laki & Perempuan';
+    protected static string $color = 'primary';
 
     protected function getData(): array
-        {
-            return [
-                'datasets' => [
-                    [
-                        'label' => 'Blog posts created',
-                        'data' => [0, 10, 5, 2, 21, 32, 45, 74, 65, 45, 77, 89],
-                    ],
+    {
+        $jumlahLaki = Balita::where('jenis_kelamin', 'Laki-laki')->count();
+        $jumlahPerempuan = Balita::where('jenis_kelamin', 'Perempuan')->count();
+        $total = $jumlahLaki + $jumlahPerempuan;
+
+        $persenLaki = $total > 0 ? round(($jumlahLaki / $total) * 100, 2) : 0;
+        $persenPerempuan = $total > 0 ? round(($jumlahPerempuan / $total) * 100, 2) : 0;
+
+        return [
+            'datasets' => [
+                [
+                    'label' => 'Persentase Balita',
+                    'data' => [$persenLaki, $persenPerempuan],
+                    'backgroundColor' => ['#3b82f6', '#10b981'],
                 ],
-                'labels' => ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-            ];
-        }
+            ],
+            'labels' => ['Laki-laki', 'Perempuan'],
+        ];
+    }
 
     protected function getType(): string
     {
-        return 'bar';
+        return 'doughnut'; // Bisa juga 'pie'
     }
 }

@@ -12,8 +12,7 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Tables\Filters\Filter;
 use Illuminate\Support\Collection;
-use Carbon\Carbon;
-use App\Models\Balita;
+use Filament\Notifications\Notification;
 
 class PertumbuhanResource extends Resource
 {
@@ -40,16 +39,19 @@ class PertumbuhanResource extends Resource
             Forms\Components\TextInput::make('berat_badan')
                 ->label('Berat Badan (kg)')
                 ->numeric()
+                ->suffix('Kg')
                 ->required(),
 
             Forms\Components\TextInput::make('tinggi_badan')
                 ->label('Tinggi Badan (cm)')
                 ->numeric()
+                ->suffix('cm')
                 ->required(),
 
             Forms\Components\TextInput::make('lingkar_kepala')
                 ->label('Lingkar Kepala (cm)')
                 ->numeric()
+                ->suffix('cm')
                 ->required(),
 
             Forms\Components\DatePicker::make('tanggal_input')
@@ -63,7 +65,7 @@ class PertumbuhanResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('balita.nama_balita')->label('Nama Balita')->searchable(),
-                Tables\Columns\TextColumn::make('balita.umur')->label('Umur Balita')->searchable(),
+                Tables\Columns\TextColumn::make('balita.umur')->label('Umur Balita')->searchable()->suffix(' bulan'),
                 Tables\Columns\TextColumn::make('balita.jenis_kelamin')->label('Jenis Kelamin')->searchable(),
                 Tables\Columns\TextColumn::make('berat_badan')->label('BB (kg)'),
                 Tables\Columns\TextColumn::make('tinggi_badan')->label('TB (cm)'),
@@ -121,21 +123,46 @@ class PertumbuhanResource extends Resource
 
     public static function hitungKategori(float $bb, float $tb, float $lk, int $umur, string $jenisKelamin): string
     {
-        if ($tb === 0 || $umur <= 0) {
+        if ($tb <= 0 || $bb <= 0 || $umur <= 0) {
+            Notification::make()
+                ->title('Data Tidak Valid')
+                ->body('Berat badan, tinggi badan, atau umur tidak boleh nol.')
+                ->danger()
+                ->send();
+
             return 'Data Tidak Valid';
         }
 
         $tbMeter = $tb / 100;
+
         $imt = $bb / ($tbMeter * $tbMeter);
 
-        if ($imt > 18) {
+        // Debug ke log Laravel
+        logger("IMT dihitung", [
+            'bb' => $bb,
+            'tb' => $tb,
+            'tbMeter' => $tbMeter,
+            'imt' => $imt,
+            'umur' => $umur,
+            'jenisKelamin' => $jenisKelamin
+        ]);
+
+        // Tampilkan notifikasi IMT ke pengguna (opsional, bisa dihapus)
+        Notification::make()
+            ->title('Hasil Perhitungan IMT')
+            ->body('IMT Anda adalah: ' . number_format($imt, 2))
+            ->success()
+            ->send();
+
+        if ($imt >= 30) {
             return 'Obesitas';
-        } elseif ($imt >= 15) {
+        } elseif ($imt >= 25) {
+            return 'Kelebihan Berat';
+        } elseif ($imt >= 18.5) {
             return 'Normal';
-        } elseif ($imt >= 13) {
-            return 'Kurus';
         } else {
-            return 'Sangat Kurus';
+            return 'Kurus';
         }
     }
+
 }

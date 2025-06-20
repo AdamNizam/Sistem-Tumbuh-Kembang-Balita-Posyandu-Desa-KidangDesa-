@@ -1,7 +1,12 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Models\Pertumbuhan;
-use Barryvdh\DomPDF\Facade\Pdf;
+use App\Models\Balita;
 
-Route::redirect('/', '/admin');
+Route::get('/', function () {
+    $totalBalita = Balita::count();
+    $jumlahLaki = Balita::where('jenis_kelamin', 'Laki-laki')->count();
+    $jumlahPerempuan = Balita::where('jenis_kelamin', 'Perempuan')->count();
+
+    return view('home', compact('totalBalita', 'jumlahLaki', 'jumlahPerempuan'));
+});

@@ -14,8 +14,7 @@ class EditPertumbuhan extends EditRecord
     protected function mutateFormDataBeforeSave(array $data): array
     {
         $balita = Balita::find($data['id_balita']);
-        $umur = Carbon::parse($balita->tanggal_lahir)->age;
-
+        $umur = $balita->umur;
         $data['kategori_pertumbuhan'] = PertumbuhanResource::hitungKategori(
             $data['berat_badan'],
             $data['tinggi_badan'],
