@@ -121,12 +121,13 @@ class PertumbuhanResource extends Resource
         ];
     }
 
-    public static function hitungKategori(float $bb, float $tb, float $lk, int $umur, string $jenisKelamin): string
+ public static function hitungKategori(float $bb, float $tb, float $lk, int $umur, string $jenisKelamin): string
     {
+        // Validasi input
         if ($tb <= 0 || $bb <= 0 || $umur <= 0) {
             Notification::make()
                 ->title('Data Tidak Valid')
-                ->body('Berat badan, tinggi badan, atau umur tidak boleh nol.')
+                ->body('Berat badan, tinggi badan, atau umur tidak boleh nol atau negatif.')
                 ->danger()
                 ->send();
 
@@ -134,35 +135,31 @@ class PertumbuhanResource extends Resource
         }
 
         $tbMeter = $tb / 100;
-
         $imt = $bb / ($tbMeter * $tbMeter);
 
-        // Debug ke log Laravel
-        logger("IMT dihitung", [
+        // Logging IMT untuk debugging
+        logger()->info('IMT dihitung', [
             'bb' => $bb,
             'tb' => $tb,
             'tbMeter' => $tbMeter,
             'imt' => $imt,
             'umur' => $umur,
-            'jenisKelamin' => $jenisKelamin
+            'jenisKelamin' => $jenisKelamin,
         ]);
 
-        // Tampilkan notifikasi IMT ke pengguna (opsional, bisa dihapus)
+        // Notifikasi hasil ke pengguna
         Notification::make()
             ->title('Hasil Perhitungan IMT')
             ->body('IMT Anda adalah: ' . number_format($imt, 2))
             ->success()
             ->send();
 
-        if ($imt >= 30) {
-            return 'Obesitas';
-        } elseif ($imt >= 25) {
-            return 'Kelebihan Berat';
-        } elseif ($imt >= 18.5) {
-            return 'Normal';
-        } else {
-            return 'Kurus';
-        }
+        // Klasifikasi IMT
+        return match (true) {
+            $imt >= 30     => 'Obesitas',
+            $imt >= 25     => 'Kelebihan Berat',
+            $imt >= 18.5   => 'Normal',
+            default        => 'Kurus',
+        };
     }
-
 }

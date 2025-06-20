@@ -2,11 +2,11 @@
 
 namespace App\Filament\Widgets;
 
-use App\Models\Balita;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
+use App\Models\Balita;
 
-class AbDashboard extends BaseWidget
+class StatsOverview extends BaseWidget
 {
     protected function getStats(): array
     {

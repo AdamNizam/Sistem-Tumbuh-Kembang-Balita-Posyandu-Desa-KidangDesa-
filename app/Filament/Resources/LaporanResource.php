@@ -38,7 +38,10 @@ class LaporanResource extends Resource
 
             Forms\Components\Select::make('id_pertumbuhan')
                 ->label('Data Pertumbuhan')
-                ->relationship('pertumbuhan', 'id') // atau bisa buat label custom
+                ->relationship('pertumbuhan', 'kategori_pertumbuhan')
+                ->getOptionLabelFromRecordUsing(function ($record) {
+                    return $record->kategori_pertumbuhan . ' - ' . $record->balita->nama_balita;
+                })
                 ->preload()
                 ->required(),
 

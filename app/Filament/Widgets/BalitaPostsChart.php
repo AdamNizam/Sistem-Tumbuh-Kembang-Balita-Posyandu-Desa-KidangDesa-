@@ -5,9 +5,9 @@ namespace App\Filament\Widgets;
 use App\Models\Balita;
 use Filament\Widgets\ChartWidget;
 
-class cgPostsChart extends ChartWidget
+class BalitaPostsChart extends ChartWidget
 {
-    protected static ?string $heading = 'Persentase Balita Laki-laki & Perempuan';
+    protected static ?string $heading = 'Persentase Jumlah Balita';
     protected static string $color = 'primary';
 
     protected function getData(): array
@@ -36,3 +36,4 @@ class cgPostsChart extends ChartWidget
         return 'doughnut'; // Bisa juga 'pie'
     }
 }
+
