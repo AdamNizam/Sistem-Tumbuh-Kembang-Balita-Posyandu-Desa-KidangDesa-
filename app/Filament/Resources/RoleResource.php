@@ -25,6 +25,8 @@ class RoleResource extends Resource implements HasShieldPermissions
 
     protected static ?string $recordTitleAttribute = 'name';
 
+    protected static ?string $pluralModelLabel = 'Role Pengguna';
+
     public static function getPermissionPrefixes(): array
     {
         return [

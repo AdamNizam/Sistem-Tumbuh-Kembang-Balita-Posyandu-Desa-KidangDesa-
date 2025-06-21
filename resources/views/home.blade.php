@@ -34,9 +34,7 @@
   <header id="header" class="header sticky-top">
     <div class="branding d-flex align-items-center">
       <div class="container position-relative d-flex align-items-center justify-content-between">
-        <a href="{{ url('/') }}" class="logo d-flex align-items-center me-auto">
-         <img src="{{ asset('images/logo-posyandu.png') }}" alt="" srcset="" width="60px" height="150px">
-        </a>
+      <img src="{{ asset('images/logo-posyandu.png') }}" alt="Logo Posyandu" class="img-fluid" style="max-height: 50px;">
 
         <nav id="navmenu" class="navmenu">
           <ul>

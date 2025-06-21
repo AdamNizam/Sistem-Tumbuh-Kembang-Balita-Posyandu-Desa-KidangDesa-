@@ -47,11 +47,6 @@ class BalitaResource extends Resource
                             ->required()
                             ->maxLength(255),
 
-                        Forms\Components\TextInput::make('umur')
-                            ->required()
-                            ->suffix(' bulan')
-                            ->numeric(),
-
                         Forms\Components\Textarea::make('alamat')
                             ->required()
                             ->columnSpan(2),
@@ -68,7 +63,7 @@ class BalitaResource extends Resource
                 Tables\Columns\TextColumn::make('jenis_kelamin'),
                 Tables\Columns\TextColumn::make('tanggal_lahir')->date(),
                 Tables\Columns\TextColumn::make('nama_orang_tua')->searchable(),
-                Tables\Columns\TextColumn::make('umur')->suffix(' bulan'),
+                Tables\Columns\TextColumn::make('umur'),
                 Tables\Columns\TextColumn::make('alamat')->limit(30),
                 Tables\Columns\TextColumn::make('created_at')->since(),
             ])
@@ -100,6 +95,8 @@ class BalitaResource extends Resource
     {
         return [
             'index' => Pages\ListBalitas::route('/'),
+            'create' => Pages\CreateBalita::route('/create'),
+            'edit' => Pages\EditBalita::route('/{record}/edit'),
         ];
     }
 }

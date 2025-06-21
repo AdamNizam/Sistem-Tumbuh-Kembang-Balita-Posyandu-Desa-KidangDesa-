@@ -17,7 +17,7 @@ return new class extends Migration
             $table->enum('jenis_kelamin', ['laki-laki', 'perempuan']);
             $table->date('tanggal_lahir');
             $table->string('nama_orang_tua');
-            $table->integer('umur');
+            $table->string('umur')->nullable();
             $table->text('alamat');
             $table->timestamps();
         });

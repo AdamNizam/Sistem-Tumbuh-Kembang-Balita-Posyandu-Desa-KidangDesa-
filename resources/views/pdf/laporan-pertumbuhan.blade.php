@@ -45,7 +45,7 @@
             @foreach ($data as $item)
                 <tr>
                     <td>{{ $item->balita->nama_balita }}</td>
-                    <td>{{ $item->balita->umur }} bulan</td>
+                    <td>{{ $item->balita->umur }}</td>
                     <td>{{ $item->balita->jenis_kelamin }}</td>
                     <td>{{ $item->berat_badan }}</td>
                     <td>{{ $item->tinggi_badan }}</td>

@@ -47,7 +47,7 @@
                     <td>{{ $item->balita->nama_balita }}</td>
                     <td>{{ $item->balita->nama_orang_tua }}</td>
                     <td>{{ $item->balita->alamat }}</td>
-                    <td>{{ $item->balita->umur }} bulan</td>
+                    <td>{{ $item->balita->umur }}</td>
                     <td>{{ $item->pertumbuhan->kategori_pertumbuhan ?? '-' }}</td>
                     <td>{{ $item->jadwal->kegiatan ?? '-' }}</td>
                     <td>

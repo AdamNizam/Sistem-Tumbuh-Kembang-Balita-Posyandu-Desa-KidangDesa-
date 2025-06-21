@@ -65,7 +65,7 @@ class PertumbuhanResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('balita.nama_balita')->label('Nama Balita')->searchable(),
-                Tables\Columns\TextColumn::make('balita.umur')->label('Umur Balita')->searchable()->suffix(' bulan'),
+                Tables\Columns\TextColumn::make('balita.umur')->label('Umur Balita')->searchable(),
                 Tables\Columns\TextColumn::make('balita.jenis_kelamin')->label('Jenis Kelamin')->searchable(),
                 Tables\Columns\TextColumn::make('berat_badan')->label('BB (kg)'),
                 Tables\Columns\TextColumn::make('tinggi_badan')->label('TB (cm)'),
@@ -121,10 +121,13 @@ class PertumbuhanResource extends Resource
         ];
     }
 
- public static function hitungKategori(float $bb, float $tb, float $lk, int $umur, string $jenisKelamin): string
+    public static function hitungKategori(float $bb, float $tb, float $lk, string $umur, string $jenisKelamin): string
     {
+        // Konversi umur dari string ke jumlah bulan (int)
+        $umurBulan = self::parseUmurToBulan($umur);
+
         // Validasi input
-        if ($tb <= 0 || $bb <= 0 || $umur <= 0) {
+        if ($tb <= 0 || $bb <= 0 || $umurBulan <= 0) {
             Notification::make()
                 ->title('Data Tidak Valid')
                 ->body('Berat badan, tinggi badan, atau umur tidak boleh nol atau negatif.')
@@ -143,7 +146,7 @@ class PertumbuhanResource extends Resource
             'tb' => $tb,
             'tbMeter' => $tbMeter,
             'imt' => $imt,
-            'umur' => $umur,
+            'umur' => $umurBulan,
             'jenisKelamin' => $jenisKelamin,
         ]);
 
@@ -162,4 +165,23 @@ class PertumbuhanResource extends Resource
             default        => 'Kurus',
         };
     }
+
+    private static function parseUmurToBulan(string $umur): int
+    {
+            // Contoh input: "2 tahun 4 bulan", "3 bulan", "1 tahun", "12 bulan"
+            $tahun = 0;
+            $bulan = 0;
+
+            if (preg_match('/(\d+)\s*tahun/', $umur, $matchTahun)) {
+                $tahun = (int) $matchTahun[1];
+            }
+
+            if (preg_match('/(\d+)\s*bulan/', $umur, $matchBulan)) {
+                $bulan = (int) $matchBulan[1];
+            }
+
+            return ($tahun * 12) + $bulan;
+    }
+
+
 }

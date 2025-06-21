@@ -10,11 +10,10 @@ class AdminAccountsSeeder extends Seeder
 {
     public function run(): void
     {
-        // Buat Role super_admin & admin jika belum ada
+        // Pastikan role super_admin ada
         $superAdminRole = Role::firstOrCreate(['name' => 'super_admin']);
-        $adminRole = Role::firstOrCreate(['name' => 'admin']);
 
-        // Buat User Super Admin
+        // Buat user super admin
         $superAdmin = User::firstOrCreate(
             ['email' => 'super@admin.com'],
             [
@@ -23,26 +22,11 @@ class AdminAccountsSeeder extends Seeder
             ]
         );
 
-        // Assign Role super_admin ke User
+        // Berikan role super_admin
         if (! $superAdmin->hasRole('super_admin')) {
             $superAdmin->assignRole($superAdminRole);
         }
 
-        // Buat User Admin Biasa
-        $admin = User::firstOrCreate(
-            ['email' => 'admin@admin.com'],
-            [
-                'name' => 'Admin Biasa',
-                'password' => bcrypt('password'), // Ganti di produksi
-            ]
-        );
-
-        // Assign Role admin ke User
-        if (! $admin->hasRole('admin')) {
-            $admin->assignRole($adminRole);
-        }
-
-        // Output ke terminal
-        echo "✅ Akun Super Admin & Admin berhasil dibuat.\n";
+        echo "✅ Super Admin berhasil dibuat.\n";
     }
 }
