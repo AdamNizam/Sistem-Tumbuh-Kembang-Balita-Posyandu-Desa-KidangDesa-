@@ -12,11 +12,13 @@ class Pertumbuhan extends Model
     protected $table = 'pertumbuhan';
 
     protected $fillable = [
-        'id_balita',
+        'id_balita', 
         'berat_badan',
         'tinggi_badan',
+        'id_jadwal',
         'lingkar_kepala',
         'tanggal_input',
+        'catatan',
         'kategori_pertumbuhan'
     ];
 
@@ -34,6 +36,11 @@ class Pertumbuhan extends Model
     public function laporan()
     {
         return $this->hasMany(Laporan::class, 'id_pertumbuhan');
+    }
+
+    public function jadwal()
+    {
+        return $this->belongsTo(Jadwal::class, 'id_jadwal');
     }
 
 }

@@ -14,16 +14,17 @@ class Jadwal extends Model
 
     protected $fillable = [
         'kegiatan',
-        'tanggal',
+        'tgl_mulai',
+        'tgl_selesai',
         'lokasi',
     ];
     
     /**
      * Relasi ke model Laporan
      */
-    public function laporan()
+    public function pertumbuhan()
     {
-        return $this->hasMany(Laporan::class, 'id_jadwal');
+        return $this->hasMany(Pertumbuhan::class, 'id_jadwal');
     }
 
 }

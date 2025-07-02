@@ -35,7 +35,6 @@ class AdminPanelProvider extends PanelProvider
              ])
           ->widgets([
                 \App\Filament\Widgets\StatsOverview::class,
-                \App\Filament\Widgets\BalitaPostsChart::class,
                 \App\Filament\Widgets\PosyanduChart::class,
             ])
             ->middleware([

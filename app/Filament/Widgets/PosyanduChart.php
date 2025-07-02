@@ -3,34 +3,48 @@
 namespace App\Filament\Widgets;
 
 use Filament\Widgets\ChartWidget;
-use App\Models\Laporan;
-use Illuminate\Support\Facades\DB;
 
 class PosyanduChart extends ChartWidget
 {
     protected static ?string $heading = 'Persentase Laporan Status Balita';
 
-
     protected function getData(): array
     {
-        $data = Laporan::select('pertumbuhan.kategori_pertumbuhan', DB::raw('COUNT(*) as jumlah'))
-            ->join('pertumbuhan', 'laporan.id_pertumbuhan', '=', 'pertumbuhan.id')
-            ->groupBy('pertumbuhan.kategori_pertumbuhan')
-            ->pluck('jumlah', 'pertumbuhan.kategori_pertumbuhan');
+        // Data dummy IMT acak untuk 50 anak
+        $dataImt = collect(range(1, 50))->map(function () {
+            return rand(130, 400) / 10; 
+        });
+        $kategoriCounts = [
+            'Obesitas' => 0,
+            'Kelebihan Berat' => 0,
+            'Normal' => 0,
+            'Kurus' => 0,
+        ];
+
+        foreach ($dataImt as $imt) {
+            $kategori = match (true) {
+                $imt >= 30 => 'Obesitas',
+                $imt >= 25 => 'Kelebihan Berat',
+                $imt >= 18.5 => 'Normal',
+                default => 'Kurus',
+            };
+            $kategoriCounts[$kategori]++;
+        }
 
         return [
             'datasets' => [
                 [
-                    'label' => 'Jumlah Anak per Kategori Pertumbuhan',
-                    'data' => $data->values()->toArray(),
+                    'label' => 'Jumlah Anak',
+                    'data' => array_values($kategoriCounts),
+                    'backgroundColor' => ['#f87171', '#fb923c', '#34d399', '#60a5fa'],
                 ],
             ],
-            'labels' => $data->keys()->toArray(),
+            'labels' => array_keys($kategoriCounts),
         ];
     }
 
     protected function getType(): string
     {
-        return 'bar';
+        return 'bar'; // Bisa diganti ke 'pie' atau 'doughnut' jika ingin
     }
 }

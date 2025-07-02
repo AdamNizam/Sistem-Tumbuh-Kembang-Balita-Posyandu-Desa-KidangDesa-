@@ -32,7 +32,10 @@ class JadwalResource extends Resource
                     ->required()
                     ->maxLength(255),
 
-                Forms\Components\DatePicker::make('tanggal')
+                Forms\Components\DatePicker::make('tgl_mulai')
+                    ->required(),
+
+                Forms\Components\DatePicker::make('tgl_selesai')
                     ->required(),
 
                 Forms\Components\TextInput::make('lokasi')
@@ -45,20 +48,21 @@ class JadwalResource extends Resource
     {  return $table
             ->columns([
                 Tables\Columns\TextColumn::make('kegiatan')->searchable(),
-                Tables\Columns\TextColumn::make('tanggal')->date(),
+                Tables\Columns\TextColumn::make('tgl_mulai')->date(),
+                Tables\Columns\TextColumn::make('tgl_selesai')->date(),
                 Tables\Columns\TextColumn::make('lokasi'),
                 Tables\Columns\TextColumn::make('created_at')->since(),
             ])
           ->filters([
-                Filter::make('tanggal')
+                Filter::make('tgl_mulai')
                     ->form([
                         Forms\Components\DatePicker::make('from')->label('Dari Tanggal'),
                         Forms\Components\DatePicker::make('until')->label('Sampai Tanggal'),
                     ])
                     ->query(function (Builder $query, array $data): Builder {
                         return $query
-                            ->when($data['from'], fn ($q) => $q->whereDate('tanggal', '>=', $data['from']))
-                            ->when($data['until'], fn ($q) => $q->whereDate('tanggal', '<=', $data['until']));
+                            ->when($data['from'], fn ($q) => $q->whereDate('tgl_mulai', '>=', $data['from']))
+                            ->when($data['until'], fn ($q) => $q->whereDate('tgl_selesai', '<=', $data['until']));
                     }),
                 ])
             ->actions([
